@@ -1,0 +1,29 @@
+{
+  "name": "leadsense-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-powered CRM CSV Importer for LeadSense AI",
+  "workspaces": [
+    "backend",
+    "user-frontend",
+    "admin-frontend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:user\" \"npm run dev:admin\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:user": "npm run dev --workspace=user-frontend",
+    "dev:admin": "npm run dev --workspace=admin-frontend",
+    "build": "npm run build --workspaces",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
