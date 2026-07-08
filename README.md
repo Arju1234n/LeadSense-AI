@@ -4,6 +4,14 @@ Enterprise-grade **AI-powered CSV Importer** that intelligently converts arbitra
 
 ---
 
+## 🌐 Live Deployments (Render)
+
+- **Backend API**: [https://leadsense-ai.onrender.com](https://leadsense-ai.onrender.com)
+- **User Frontend**: [https://leadsense-ai-frontend.onrender.com](https://leadsense-ai-frontend.onrender.com)
+- **Admin Frontend**: [https://leadsense-ai-admin.onrender.com](https://leadsense-ai-admin.onrender.com)
+
+---
+
 ## 🚀 Features
 
 - **🤖 AI-Powered Mapping**: Automatically maps different CSV structures to CRM schema using LLMs
