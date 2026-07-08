@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import ProgressBar from '@/components/ProgressBar';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import { CheckCircle, Clock, FileCheck, AlertTriangle } from 'lucide-react';
@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 
 export default function ProcessingPage() {
   const params = useParams();
+  const router = useRouter();
   const importId = params?.id as string;
   const { status, loading, error, startImport } = useImport(importId);
 
@@ -61,6 +62,14 @@ export default function ProcessingPage() {
             ? error || status.errorMessage || 'An error occurred during row extraction.'
             : 'Please keep this window open while the AI mapping engine processes the rows in batches.'}
         </p>
+        {isCompleted && (
+          <button
+            onClick={() => router.push(`/import/${importId}/results`)}
+            className="mt-4 btn-primary font-bold"
+          >
+            View Results →
+          </button>
+        )}
       </div>
 
       {/* Progress */}

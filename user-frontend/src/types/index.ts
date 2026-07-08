@@ -42,9 +42,9 @@ export interface Lead {
   state?: string;
   country?: string;
   lead_owner?: string;
-  crm_status: CRMStatus;
+  crm_status: string;
   crm_note?: string;
-  data_source: DataSource;
+  data_source?: string;
   possession_time?: string;
   description?: string;
   userId: string;
@@ -78,8 +78,9 @@ export interface ImportHistory {
   skippedRows: number;
   status: ImportStatus;
   errorMessage?: string;
-  aiProvider: 'openai' | 'anthropic' | 'gemini';
-  processingTimeMs: number;
+  aiProvider: string;
+  /** processingTime in ms — matches backend field name */
+  processingTime: number;
   batchCount: number;
   skippedRecords: SkippedRecord[];
   startedAt: Date | string;

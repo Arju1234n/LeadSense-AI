@@ -120,7 +120,6 @@ leadSchema.index({ email: 1, mobile_without_country_code: 1 });
 leadSchema.index({ crm_status: 1, created_at: -1 });
 leadSchema.index({ data_source: 1, created_at: -1 });
 leadSchema.index({ userId: 1, created_at: -1 });
-leadSchema.index({ importHistoryId: 1 });
 
 // Text index for search functionality
 leadSchema.index({

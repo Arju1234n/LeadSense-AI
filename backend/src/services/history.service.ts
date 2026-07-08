@@ -79,6 +79,25 @@ export const updateImportHistoryStatus = async (
 };
 
 /**
+ * Update only successfulRows / skippedRows during active processing.
+ * Does NOT touch startedAt or any other status field.
+ */
+export const updateImportProgress = async (
+  id: string,
+  successfulRows: number,
+  skippedRows: number
+): Promise<void> => {
+  try {
+    await ImportHistory.findByIdAndUpdate(id, {
+      $set: { successfulRows, skippedRows },
+    });
+  } catch (error) {
+    // Non-fatal — processing continues even if progress write fails
+    logger.warn('Failed to update import progress (non-fatal):', error);
+  }
+};
+
+/**
  * Get import history by ID
  */
 export const getImportHistoryById = async (

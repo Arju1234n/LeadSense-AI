@@ -11,6 +11,11 @@ export function useImport(importId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  // Track whether we've shown the processing UI for at least one cycle
+  const hasShownProcessingRef = useRef(false);
+  // Minimum time (ms) to show the processing page before redirecting
+  const MIN_DISPLAY_MS = 1500;
+  const mountTimeRef = useRef<number>(Date.now());
 
   const startImport = async () => {
     try {
@@ -28,24 +33,48 @@ export function useImport(importId: string) {
     }
   };
 
-  const pollStatus = async () => {
+  /**
+   * Redirect to results, but always ensure the processing page has been
+   * visible for at least MIN_DISPLAY_MS so the animation is seen.
+   */
+  const redirectToResults = () => {
+    const elapsed = Date.now() - mountTimeRef.current;
+    const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
+    setTimeout(() => {
+      router.push(`/import/${importId}/results`);
+    }, remaining);
+  };
+
+  const pollStatus = async (isInitial = false) => {
     try {
       const response = await importService.getImportStatus(importId);
       if (response.success && response.data) {
         setStatus(response.data);
         setLoading(false);
 
-        if (
+        const isTerminal =
           response.data.status === IMPORT_STATUSES.COMPLETED ||
-          response.data.status === IMPORT_STATUSES.FAILED
-        ) {
-          router.push(`/import/${importId}/results`);
+          response.data.status === IMPORT_STATUSES.FAILED;
+
+        if (isTerminal) {
+          // On the very first poll, if we're already done, still show the
+          // processing UI for MIN_DISPLAY_MS so the animation plays.
+          if (isInitial) {
+            // Mark that processing was shown (even if briefly)
+            hasShownProcessingRef.current = true;
+            redirectToResults();
+          } else {
+            // Subsequent poll hit terminal — redirect with remaining time guard
+            if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+            redirectToResults();
+          }
           return;
         }
 
-        // Setup interval for subsequent polling
+        // Still running — set up interval for subsequent polls
+        hasShownProcessingRef.current = true;
         if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
-        
+
         pollingIntervalRef.current = setInterval(async () => {
           try {
             const pollResponse = await importService.getImportStatus(importId);
@@ -56,7 +85,7 @@ export function useImport(importId: string) {
                 pollResponse.data.status === IMPORT_STATUSES.FAILED
               ) {
                 if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
-                router.push(`/import/${importId}/results`);
+                redirectToResults();
               }
             }
           } catch (pollErr) {
@@ -71,8 +100,9 @@ export function useImport(importId: string) {
   };
 
   useEffect(() => {
+    mountTimeRef.current = Date.now();
     if (importId) {
-      pollStatus();
+      pollStatus(true);
     }
     return () => {
       if (pollingIntervalRef.current) {

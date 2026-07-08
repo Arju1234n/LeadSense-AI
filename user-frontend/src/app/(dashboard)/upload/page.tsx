@@ -98,7 +98,7 @@ export default function UploadPage() {
               disabled={uploading}
             >
               <CheckCircle2 className="w-5 h-5" />
-              Upload and Analyze
+              Upload & Preview
             </button>
             <button
               onClick={handleClearFile}

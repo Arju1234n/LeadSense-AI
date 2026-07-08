@@ -13,8 +13,8 @@ import {
 
 const router = Router();
 
-// All admin routes require authentication and admin role
-router.use(authenticate, authorize('admin'));
+// All admin routes require authentication and admin/user role
+router.use(authenticate, authorize('admin', 'user'));
 
 /**
  * @route   GET /api/admin/users

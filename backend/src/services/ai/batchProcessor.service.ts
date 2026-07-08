@@ -10,7 +10,8 @@ import { BatchProcessingResult, BatchProcessingError } from '../../types/csv';
  */
 export const processBatches = async (
   csvRows: Record<string, any>[],
-  headers: string[]
+  headers: string[],
+  onBatchComplete?: (successSoFar: number, skippedSoFar: number) => Promise<void>
 ): Promise<BatchProcessingResult<CRMLead>> => {
   const batchSize = aiConfig.batchSize;
   const totalBatches = Math.ceil(csvRows.length / batchSize);
@@ -67,6 +68,16 @@ export const processBatches = async (
       }
 
       processedBatches++;
+
+      // Notify caller of incremental progress
+      if (onBatchComplete) {
+        const successSoFar = results.length;
+        const skippedSoFar = errors.reduce(
+          (acc, e) => acc + (Array.isArray(e.data) ? e.data.length : 0),
+          0
+        );
+        await onBatchComplete(successSoFar, skippedSoFar).catch(() => {/* non-fatal */});
+      }
 
       logger.info(`Batch ${batchNumber} completed`, {
         extracted: valid.length,

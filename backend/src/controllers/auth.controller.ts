@@ -41,8 +41,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       throw new AppError('Invalid credentials', 401);
     }
 
-    // Verify role is admin
-    if (user.role !== 'admin') {
+    // Verify role is admin or user
+    if (user.role !== 'admin' && user.role !== 'user') {
       throw new AppError('Access denied. Admin access only.', 403);
     }
 
@@ -57,12 +57,14 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
     res.status(200).json({
       success: true,
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+      data: {
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
       },
     });
   } catch (error) {

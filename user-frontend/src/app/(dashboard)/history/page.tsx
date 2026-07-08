@@ -79,9 +79,9 @@ export default function HistoryPage() {
       },
     },
     {
-      accessorKey: 'processingTimeMs',
+      accessorKey: 'processingTime',
       header: 'Time',
-      cell: ({ row }) => `${Math.round(row.original.processingTimeMs / 1000)}s`,
+      cell: ({ row }) => `${Math.round(row.original.processingTime / 1000)}s`,
     },
     {
       accessorKey: 'aiProvider',

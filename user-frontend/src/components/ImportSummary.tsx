@@ -8,7 +8,7 @@ interface ImportSummaryProps {
   totalRows: number;
   successfulRows: number;
   skippedRows: number;
-  processingTimeMs: number;
+  processingTime: number;
   aiProvider: string;
 }
 
@@ -16,7 +16,7 @@ export default function ImportSummary({
   totalRows,
   successfulRows,
   skippedRows,
-  processingTimeMs,
+  processingTime,
   aiProvider,
 }: ImportSummaryProps) {
   const successRate = totalRows > 0 ? Math.round((successfulRows / totalRows) * 100) : 0;
@@ -140,7 +140,7 @@ export default function ImportSummary({
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-text-secondary">Processing Speed</p>
             <p className="text-2xl font-black text-text-primary mt-1">
-              {Math.round(processingTimeMs / 1000)}s
+              {Math.round(processingTime / 1000)}s
               <span className="text-xs font-medium text-text-secondary ml-1.5 capitalize">via {aiProvider}</span>
             </p>
           </div>

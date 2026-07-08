@@ -14,10 +14,7 @@
     "dev:backend": "npm run dev --workspace=backend",
     "dev:user": "npm run dev --workspace=user-frontend",
     "dev:admin": "npm run dev --workspace=admin-frontend",
-    "build": "npm run build --workspaces",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:build": "docker-compose build"
+    "build": "npm run build --workspaces"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

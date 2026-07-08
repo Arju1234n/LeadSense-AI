@@ -3,8 +3,8 @@ import { parsePhone } from '../../utils/phone';
 import { normalizeEmail } from '../../utils/email';
 import { parseDate } from '../../utils/date';
 import { normalizeCountry } from '../../utils/country';
-import { normalizeCRMStatus } from '../../constants/crmStatus';
-import { normalizeDataSource } from '../../constants/dataSource';
+import { normalizeCRMStatus, DEFAULT_CRM_STATUS } from '../../constants/crmStatus';
+import { normalizeDataSource, DEFAULT_DATA_SOURCE } from '../../constants/dataSource';
 import { logger } from '../../utils/logger';
 
 /**
@@ -112,11 +112,11 @@ export const mapCRMLead = (rawLead: any): NormalizedCRMLead => {
     if (status) {
       normalized.crm_status = status;
     } else {
-      normalized._warnings?.push('Invalid CRM status, using default "new"');
-      normalized.crm_status = 'new';
+      normalized._warnings?.push('Invalid CRM status, using default');
+      normalized.crm_status = DEFAULT_CRM_STATUS;
     }
   } else {
-    normalized.crm_status = 'new';
+    normalized.crm_status = DEFAULT_CRM_STATUS;
   }
 
   // Map crm_note
@@ -128,7 +128,7 @@ export const mapCRMLead = (rawLead: any): NormalizedCRMLead => {
   if (rawLead.data_source) {
     normalized.data_source = normalizeDataSource(rawLead.data_source);
   } else {
-    normalized.data_source = 'csv_import';
+    normalized.data_source = DEFAULT_DATA_SOURCE;
   }
 
   // Map possession_time

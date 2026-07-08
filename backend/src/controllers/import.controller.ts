@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
-import { getImportHistoryById, updateImportHistoryStatus } from '../services/history.service';
+import { getImportHistoryById, updateImportHistoryStatus, updateImportProgress } from '../services/history.service';
 import { parseCSVFast } from '../services/csv/csvParser.service';
 import { processBatches, convertErrorsToSkippedRecords } from '../services/ai/batchProcessor.service';
 import { mapCRMLeads } from '../services/crm/crmMapper.service';
@@ -76,7 +76,11 @@ export const processImport = asyncHandler(
 
       const batchResult = await processBatches(
         parseResult.data,
-        parseResult.headers
+        parseResult.headers,
+        async (successSoFar, skippedSoFar) => {
+          // Write incremental progress so the frontend polling sees live updates
+          await updateImportProgress(importId, successSoFar, skippedSoFar);
+        }
       );
 
       if (batchResult.results.length === 0) {
@@ -265,6 +269,7 @@ export const getImportResults = asyncHandler(
       success: true,
       data: {
         importId: importHistory.id,
+        import: importHistory,
         leads,
         skippedRecords: importHistory.skippedRecords,
         pagination: {

@@ -129,14 +129,16 @@ export default function ResultsPage() {
     {
       accessorKey: 'email',
       header: 'Email',
-      cell: ({ row }) => row.original.email || '-',
+      cell: ({ row }) => row.original.email
+        ? <a href={`mailto:${row.original.email}`} className="text-accent hover:underline">{row.original.email}</a>
+        : <span className="text-text-tertiary">-</span>,
     },
     {
       accessorKey: 'mobile_without_country_code',
       header: 'Phone',
       cell: ({ row }) =>
         row.original.mobile_without_country_code
-          ? `${row.original.country_code ? '+' + row.original.country_code : ''} ${row.original.mobile_without_country_code}`
+          ? `${row.original.country_code || ''} ${row.original.mobile_without_country_code}`.trim()
           : '-',
     },
     {
@@ -145,36 +147,54 @@ export default function ResultsPage() {
       cell: ({ row }) => row.original.company || '-',
     },
     {
+      accessorKey: 'city',
+      header: 'City',
+      cell: ({ row }) => row.original.city || '-',
+    },
+    {
+      accessorKey: 'state',
+      header: 'State',
+      cell: ({ row }) => row.original.state || '-',
+    },
+    {
+      accessorKey: 'data_source',
+      header: 'Source',
+      cell: ({ row }) => row.original.data_source
+        ? <span className="font-mono text-xs bg-bg-tertiary border border-border-primary px-2 py-0.5 rounded-lg">{row.original.data_source}</span>
+        : <span className="text-text-tertiary">-</span>,
+    },
+    {
       accessorKey: 'crm_status',
       header: 'Status',
       cell: ({ row }) => {
         const status = row.original.crm_status;
-        
-        // Color-coded badges for the 4 CRM status values
         const statusStyles: Record<string, string> = {
           'GOOD_LEAD_FOLLOW_UP': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700',
           'DID_NOT_CONNECT': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-700',
           'BAD_LEAD': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-700',
           'SALE_DONE': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-700',
         };
-
-        // Friendly labels
         const statusLabels: Record<string, string> = {
-          'GOOD_LEAD_FOLLOW_UP': 'Good Lead – Follow Up',
-          'DID_NOT_CONNECT': 'Did Not Connect',
+          'GOOD_LEAD_FOLLOW_UP': 'Follow Up',
+          'DID_NOT_CONNECT': 'No Connect',
           'BAD_LEAD': 'Bad Lead',
           'SALE_DONE': 'Sale Done',
         };
-
         const badgeStyle = statusStyles[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 border border-gray-200 dark:border-gray-700';
         const label = statusLabels[status] || status;
-
         return (
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${badgeStyle}`}>
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${badgeStyle}`}>
             {label}
           </span>
         );
       },
+    },
+    {
+      accessorKey: 'crm_note',
+      header: 'Notes',
+      cell: ({ row }) => row.original.crm_note
+        ? <span className="text-xs text-text-secondary max-w-xs block truncate" title={row.original.crm_note}>{row.original.crm_note}</span>
+        : <span className="text-text-tertiary">-</span>,
     },
   ];
 
@@ -205,11 +225,10 @@ export default function ResultsPage() {
     <div className="space-y-6">
       {/* Back Button */}
       <Link
-        href="/history"
-        className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary font-bold text-sm transition-colors"
+        href="/upload"
+        className="inline-flex items-center gap-2 text-accent hover:underline font-bold text-sm transition-colors"
       >
-        <ArrowLeft className="w-4 h-4" />
-        Back to History
+        + Import Another File
       </Link>
 
       {/* Summary Cards */}
@@ -217,7 +236,7 @@ export default function ResultsPage() {
         totalRows={importData.totalRows}
         successfulRows={importData.successfulRows}
         skippedRows={importData.skippedRows}
-        processingTimeMs={importData.processingTimeMs}
+        processingTime={importData.processingTime}
         aiProvider={importData.aiProvider}
       />
 

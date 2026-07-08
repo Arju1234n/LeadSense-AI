@@ -27,15 +27,15 @@ export default function DataTable<T>({
 
   return (
     <div className="w-full table-container bg-bg-secondary transition-colors duration-300">
-      <div className="overflow-x-auto no-scrollbar" style={{ maxHeight }}>
-        <table className="w-full border-collapse">
-          <thead className="table-header">
+      <div className="overflow-auto no-scrollbar" style={{ maxHeight }}>
+        <table className="w-full border-collapse min-w-max">
+          <thead className="table-header sticky top-0 z-10 bg-bg-secondary shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="border-b border-border-primary">
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="table-head"
+                    className="table-head whitespace-nowrap"
                   >
                     {header.isPlaceholder
                       ? null
@@ -70,7 +70,7 @@ export default function DataTable<T>({
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="table-cell font-medium group-hover:text-accent transition-colors duration-150"
+                      className="table-cell font-medium group-hover:text-accent transition-colors duration-150 whitespace-nowrap"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
