@@ -87,4 +87,20 @@ export const importService = {
     });
     return response.data;
   },
+
+  /**
+   * Login user
+   */
+  async login(credentials: any): Promise<APIResponse<{ token: string; user: any }>> {
+    const response = await api.post<APIResponse<{ token: string; user: any }>>('/auth/login', credentials);
+    return response.data;
+  },
+
+  /**
+   * Register user
+   */
+  async register(data: any): Promise<APIResponse<{ user: any }>> {
+    const response = await api.post<APIResponse<{ user: any }>>('/auth/register', data);
+    return response.data;
+  },
 };

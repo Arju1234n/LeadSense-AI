@@ -7,8 +7,13 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to dashboard
-    router.push('/dashboard');
+    // Redirect depending on auth state
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/dashboard');
+    } else {
+      router.push('/login');
+    }
   }, [router]);
 
   return (

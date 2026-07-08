@@ -26,7 +26,7 @@ export const authenticate = async (
 
     const isAdminRoute = req.originalUrl.includes('/admin');
 
-    if (!isAdminRoute) {
+    if (!isAdminRoute && env.SKIP_AUTH) {
       let mockUser = await User.findOne({ email: 'demo@groweasy.com' });
       if (!mockUser) {
         mockUser = await User.create({

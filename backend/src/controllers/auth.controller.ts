@@ -96,7 +96,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       name,
       email,
       password,
-      role: 'admin',
+      role: req.body.role || 'user',
       isActive: true,
     });
 

@@ -47,6 +47,9 @@ const envSchema = z.object({
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+
+  // Auth Bypass
+  SKIP_AUTH: z.string().transform((val) => val === 'true').default('false'),
 });
 
 // Validate and parse environment variables

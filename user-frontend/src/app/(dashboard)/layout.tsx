@@ -1,8 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import PageTransition from '@/components/PageTransition';
 
@@ -12,6 +13,19 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+    } else {
+      setAuthorized(true);
+    }
+    setLoading(false);
+  }, [router]);
 
   // Get page title based on current route
   const getPageTitle = () => {
@@ -23,6 +37,17 @@ export default function DashboardLayout({
     if (pathname?.includes('/results')) return 'Import Results';
     return 'GrowEasy CSV Importer';
   };
+
+  if (loading || !authorized) {
+    return (
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <div className="relative w-12 h-12">
+          <div className="absolute inset-0 rounded-full border-4 border-bg-tertiary"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-t-accent border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <ThemeProvider>

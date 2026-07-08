@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   Home, 
   Upload, 
@@ -20,6 +20,13 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
 
   return (
     <div className="w-64 bg-bg-secondary border-r border-border-primary min-h-screen flex flex-col transition-all duration-300 z-20">
@@ -59,7 +66,7 @@ export default function Sidebar() {
                   'relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer overflow-hidden group',
                   isActive
                     ? 'text-accent font-semibold'
-                    : 'text-text-secondary hover:text-text-primary'
+                     : 'text-text-secondary hover:text-text-primary'
                 )}
               >
                 {/* Active Background Glow */}
@@ -92,6 +99,7 @@ export default function Sidebar() {
         <motion.button 
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-text-secondary hover:bg-bg-tertiary hover:text-text-primary w-full transition-all duration-300"
         >
           <LogOut className="w-5 h-5 text-red-500" />
