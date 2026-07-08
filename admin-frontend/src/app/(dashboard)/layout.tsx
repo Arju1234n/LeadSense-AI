@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
 import AdminNavbar from '@/components/AdminNavbar';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import PageTransition from '../../../../user-frontend/src/components/PageTransition';
+import PageTransition from '@/components/PageTransition';
 
 export default function DashboardLayout({
   children,

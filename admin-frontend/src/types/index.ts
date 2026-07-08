@@ -1,6 +1,6 @@
-import { Lead, ImportHistory, APIResponse, Pagination } from '../../../user-frontend/src/types';
+import { Lead, ImportHistory, APIResponse, Pagination } from './user-types';
 
-export * from '../../../user-frontend/src/types';
+export * from './user-types';
 
 export interface AdminStats {
   totalUsers: number;
