@@ -30,6 +30,14 @@ npm test --workspace=backend
 
 The development server runs on `http://localhost:5000` by default.
 
+Production API URL: `https://leadsense-ai.onrender.com/api`
+
+Production CORS origins:
+
+```env
+CORS_ORIGIN=https://leadsense-ai-frontend.onrender.com,https://leadsense-ai-admin.onrender.com
+```
+
 ## API Areas
 
 - `POST /api/auth/register` - create a user

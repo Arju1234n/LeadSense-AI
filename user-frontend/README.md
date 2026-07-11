@@ -28,6 +28,14 @@ npm run type-check --workspace=user-frontend
 
 The development server runs on `http://localhost:3001`.
 
+Production URL: `https://leadsense-ai-frontend.onrender.com`
+
+Production API URL:
+
+```env
+NEXT_PUBLIC_API_URL=https://leadsense-ai.onrender.com/api
+```
+
 ## Pages
 
 - `/login` - user sign in

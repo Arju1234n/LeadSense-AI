@@ -55,6 +55,12 @@ Local services:
 - Backend API: `http://localhost:5000/api`
 - Health check: `http://localhost:5000/api/health`
 
+Production services:
+
+- User app: `https://leadsense-ai-frontend.onrender.com`
+- Admin app: `https://leadsense-ai-admin.onrender.com`
+- Backend API: `https://leadsense-ai.onrender.com/api`
+
 Run one service:
 
 ```bash

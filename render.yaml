@@ -28,7 +28,7 @@ services:
       - key: SKIP_AUTH
         value: "false"
       - key: CORS_ORIGIN
-        value: "*" # Update this with specific frontend URLs in production
+        value: https://leadsense-ai-frontend.onrender.com,https://leadsense-ai-admin.onrender.com
 
   # 2. User Frontend
   - type: web
@@ -40,7 +40,7 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: NEXT_PUBLIC_API_URL
-        value: https://leadsense-api.onrender.com/api # Replace with your actual backend URL if different
+        value: https://leadsense-ai.onrender.com/api
 
   # 3. Admin Frontend
   - type: web
@@ -52,4 +52,4 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: NEXT_PUBLIC_API_URL
-        value: https://leadsense-api.onrender.com/api # Replace with your actual backend URL if different
+        value: https://leadsense-ai.onrender.com/api

@@ -28,6 +28,14 @@ npm run type-check --workspace=admin-frontend
 
 The development server runs on `http://localhost:3002`.
 
+Production URL: `https://leadsense-ai-admin.onrender.com`
+
+Production API URL:
+
+```env
+NEXT_PUBLIC_API_URL=https://leadsense-ai.onrender.com/api
+```
+
 ## Pages
 
 - `/login` - admin sign in
