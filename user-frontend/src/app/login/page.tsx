@@ -100,11 +100,11 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 px-3.5 py-1.5 rounded-full text-indigo-500 dark:text-indigo-400 font-semibold text-xs tracking-wide uppercase mb-3">
             <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-            <span>GrowEasy User Portal</span>
+            <span>GrowEasy Importer</span>
           </div>
-          <h2 className="text-3xl font-black tracking-tight text-text-primary">Secure Access Center</h2>
+          <h2 className="text-3xl font-black tracking-tight text-text-primary">Welcome Back</h2>
           <p className="text-text-secondary text-sm font-medium mt-2">
-            Sign in to upload and map your CSV leads
+            Sign in to upload and map your CSV leads.
           </p>
         </div>
 
@@ -196,16 +196,19 @@ export default function LoginPage() {
         </button>
 
         {/* Guest Mode Explainer */}
-        <div className="text-center mt-3">
+        <div className="text-center mt-4">
+          <h4 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">
+            Demo Quick Access
+          </h4>
           <p className="text-xs text-text-tertiary">
-            <span className="font-bold text-text-secondary">Demo Mode:</span> Explore the AI-powered CSV Importer without creating an account.
+            Explore the AI-powered CSV Importer without creating an account.
           </p>
         </div>
 
         {/* Footer Link */}
         <div className="mt-8 pt-4 border-t border-border-primary text-center text-xs text-text-secondary font-medium">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-accent hover:underline font-bold">
+          <Link href="/register" className="text-accent hover:underline font-bold block mt-1">
             Register Here
           </Link>
         </div>
