@@ -163,9 +163,9 @@ const seedDefaultData = async (): Promise<void> => {
   try {
     const { User } = await import('../models/User');
     
-    const adminCount = await User.countDocuments({ role: 'admin' });
+    const existingAdmin = await User.findOne({ email: 'admin@groweasy.com' });
     
-    if (adminCount === 0) {
+    if (!existingAdmin) {
       const defaultAdmin = await User.create({
         name: 'Demo Admin',
         email: 'admin@groweasy.com',
@@ -182,8 +182,8 @@ const seedDefaultData = async (): Promise<void> => {
     }
 
     // Seed default user if none exists
-    const userCount = await User.countDocuments({ role: 'user' });
-    if (userCount === 0) {
+    const existingUser = await User.findOne({ email: 'user@groweasy.com' });
+    if (!existingUser) {
       const defaultUser = await User.create({
         name: 'Demo User',
         email: 'user@groweasy.com',
