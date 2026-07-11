@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, getApiBaseUrl } from './api';
 import { APIResponse, AdminStats, ImportHistory, Lead, UserStats } from '../types';
 
 export const adminService = {
@@ -89,7 +89,7 @@ export const adminService = {
     endDate?: string;
   }): string {
     const query = new URLSearchParams(params as any).toString();
-    return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/admin/leads/export?${query}`;
+    return `${getApiBaseUrl()}/admin/leads/export?${query}`;
   },
 
   /**

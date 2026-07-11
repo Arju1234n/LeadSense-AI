@@ -1,6 +1,21 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const PRODUCTION_API_URL = 'https://leadsense-ai.onrender.com/api';
+const LOCAL_API_URL = 'http://localhost:5000/api';
+
+export const getApiBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('onrender.com')) {
+    return PRODUCTION_API_URL;
+  }
+
+  return LOCAL_API_URL;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

@@ -37,7 +37,7 @@ export const initializeApp = async (): Promise<Application> => {
     const corsOrigins = env.CORS_ORIGIN.split(',').map((origin) => origin.trim());
     app.use(
       cors({
-        origin: corsOrigins,
+        origin: corsOrigins.includes('*') ? true : corsOrigins,
         credentials: true,
       })
     );

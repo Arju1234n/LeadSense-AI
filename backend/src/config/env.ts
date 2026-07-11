@@ -4,6 +4,9 @@ import { z } from 'zod';
 // Load environment variables
 dotenv.config();
 
+const DEFAULT_CORS_ORIGIN =
+  'http://localhost:3000,http://localhost:3001,http://localhost:3002,https://leadsense-ai-frontend.onrender.com,https://leadsense-ai-admin.onrender.com';
+
 // Environment variable schema - Multi-Provider AI Support
 const envSchema = z.object({
   // Server
@@ -41,7 +44,7 @@ const envSchema = z.object({
   ALLOWED_FILE_TYPES: z.string().default('.csv'),
 
   // CORS
-  CORS_ORIGIN: z.string().default('http://localhost:3000,http://localhost:3001'),
+  CORS_ORIGIN: z.string().default(DEFAULT_CORS_ORIGIN),
 
   // Rate Limiting
   RATE_LIMIT_WINDOW_MS: z.string().transform(Number).default('900000'), // 15 min
