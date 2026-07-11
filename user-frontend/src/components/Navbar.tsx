@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Bell, User, Sun, Moon } from 'lucide-react';
+import { Bell, User, Sun, Moon, LogIn } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 interface NavbarProps {
   title: string;
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 export default function Navbar({ title }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
@@ -36,6 +38,12 @@ export default function Navbar({ title }: NavbarProps) {
       .toUpperCase();
   };
 
+  const handleSignInClick = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
+
   return (
     <header className="sticky top-0 z-10 bg-bg-secondary/75 border-b border-border-primary px-8 py-4 backdrop-blur-md transition-all duration-300">
       <div className="flex items-center justify-between">
@@ -46,6 +54,19 @@ export default function Navbar({ title }: NavbarProps) {
         </div>
 
         <div className="flex items-center gap-5">
+          {/* Sign In CTA for Guest Users */}
+          {user && (user as any).isGuest && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleSignInClick}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-md shadow-indigo-600/10 transition-all duration-200"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Sign In</span>
+            </motion.button>
+          )}
+
           {/* Theme Toggle */}
           <motion.button
             whileHover={{ scale: 1.05 }}

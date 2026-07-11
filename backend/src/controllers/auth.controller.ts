@@ -85,6 +85,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       throw new AppError('Please provide all required fields', 400);
     }
 
+    if (password.length < 6) {
+      throw new AppError('Password must be at least 6 characters', 400);
+    }
+
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import { usePathname, useRouter } from 'next/navigation';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import PageTransition from '@/components/PageTransition';
+import { AlertCircle } from 'lucide-react';
 
 export default function DashboardLayout({
   children,
@@ -16,6 +17,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -23,6 +25,17 @@ export default function DashboardLayout({
       router.push('/login');
     } else {
       setAuthorized(true);
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const parsed = JSON.parse(storedUser);
+          if (parsed.isGuest) {
+            setIsGuest(true);
+          }
+        } catch (e) {
+          console.error('Failed to parse user session in layout', e);
+        }
+      }
     }
     setLoading(false);
   }, [router]);
@@ -56,6 +69,17 @@ export default function DashboardLayout({
         <div className="flex-1 flex flex-col min-w-0">
           <Navbar title={getPageTitle()} />
           <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-bg-primary/40 bg-dots">
+            {isGuest && (
+              <div className="mb-6 p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 text-amber-500 flex items-center gap-3 text-sm font-semibold relative overflow-hidden backdrop-blur-sm">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <div>
+                  <span className="font-black uppercase tracking-wider text-xs bg-amber-500/10 px-2 py-0.5 rounded-md mr-2">
+                    Demo Mode
+                  </span>
+                  <span>You are exploring the application without signing in. Some features may be limited.</span>
+                </div>
+              </div>
+            )}
             <PageTransition>{children}</PageTransition>
           </main>
         </div>

@@ -33,6 +33,11 @@ export default function RegisterPage() {
       return;
     }
 
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -162,6 +167,7 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   className="w-full p-3 pl-12 bg-bg-secondary border border-border-primary rounded-xl focus:border-accent focus:ring-1 focus:ring-accent outline-none text-text-primary text-sm font-medium transition-colors"
                   required
+                  minLength={6}
                   disabled={loading}
                 />
               </div>
@@ -180,6 +186,7 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   className="w-full p-3 pl-12 bg-bg-secondary border border-border-primary rounded-xl focus:border-accent focus:ring-1 focus:ring-accent outline-none text-text-primary text-sm font-medium transition-colors"
                   required
+                  minLength={6}
                   disabled={loading}
                 />
               </div>
