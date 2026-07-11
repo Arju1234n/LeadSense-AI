@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import { env } from './config/env';
-import { connectDatabase } from './config/database';
+import { connectDatabase, checkDatabaseHealth } from './config/database';
 import { initializeAIClient } from './config/ai';
 import { logger } from './utils/logger';
 import { requestLogger } from './middleware/requestLogger';
@@ -55,15 +55,25 @@ export const initializeApp = async (): Promise<Application> => {
     // Rate limiting
     app.use('/api/', apiLimiter);
 
-    // Health check route
-    app.get('/health', (req, res) => {
-      res.status(200).json({
-        success: true,
-        message: 'Server is healthy',
+    // Health check routes
+    const healthHandler = async (req: express.Request, res: express.Response) => {
+      const dbHealth = await checkDatabaseHealth();
+
+      res.status(dbHealth.healthy ? 200 : 503).json({
+        status: dbHealth.healthy ? 'ok' : 'degraded',
         timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
         environment: env.NODE_ENV,
+        database: {
+          connected: dbHealth.healthy,
+          latency: dbHealth.latency,
+          status: dbHealth.status,
+        },
       });
-    });
+    };
+
+    app.get('/health', healthHandler);
+    app.get('/api/health', healthHandler);
 
     // API routes
     app.use('/api', routes);

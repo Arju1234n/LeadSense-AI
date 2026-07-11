@@ -1,132 +1,69 @@
-# Backend API - GrowEasy CSV Importer
+# Backend
 
-Enterprise-grade backend API for AI-powered CSV importing.
+Express and TypeScript API for CSV uploads, AI-assisted CRM mapping, import history, authentication, and admin reporting.
 
-## 📁 Project Structure
+## Setup
 
-```
-backend/
-├── src/
-│   ├── config/              # Configuration files
-│   │   ├── database.ts      # MongoDB connection
-│   │   ├── env.ts           # Environment validation
-│   │   └── ai.ts            # AI provider configuration
-│   ├── controllers/         # Request handlers
-│   │   ├── csv.controller.ts
-│   │   ├── import.controller.ts
-│   │   └── admin.controller.ts
-│   ├── routes/              # API routes
-│   │   ├── csv.routes.ts
-│   │   ├── import.routes.ts
-│   │   └── admin.routes.ts
-│   ├── services/            # Business logic
-│   │   ├── csv/             # CSV processing
-│   │   ├── ai/              # AI integration
-│   │   └── crm/             # CRM mapping
-│   ├── models/              # Mongoose schemas
-│   │   ├── User.ts
-│   │   ├── Lead.ts
-│   │   └── ImportHistory.ts
-│   ├── middleware/          # Express middleware
-│   │   ├── upload.ts
-│   │   ├── errorHandler.ts
-│   │   ├── requestLogger.ts
-│   │   └── auth.ts
-│   ├── utils/               # Utility functions
-│   │   ├── phone.ts
-│   │   ├── email.ts
-│   │   ├── date.ts
-│   │   ├── country.ts
-│   │   └── logger.ts
-│   ├── constants/           # Application constants
-│   │   ├── crmStatus.ts
-│   │   └── dataSource.ts
-│   ├── types/               # TypeScript types
-│   │   ├── crm.ts
-│   │   └── csv.ts
-│   ├── validators/          # Zod schemas
-│   │   └── crm.schema.ts
-│   ├── app.ts               # Express app
-│   └── server.ts            # Server entry point
-├── tests/                   # Test files
-├── uploads/                 # CSV uploads (gitignored)
-└── logs/                    # Application logs
-```
-
-## 🚀 Getting Started
+From the repository root:
 
 ```bash
-# Install dependencies
 npm install
-
-# Copy environment variables
-cp .env.example .env
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Run production server
-npm start
-
-# Run tests
-npm test
+cp backend/.env.example backend/.env
 ```
 
-## 📝 Environment Variables
+Edit `backend/.env` before running the API. At minimum, set:
 
-See `.env.example` for all required environment variables.
+- `MONGODB_URI`
+- `JWT_SECRET`
+- `BEDROCK_API_KEY`
+- `AWS_REGION`
+- `CORS_ORIGIN`
 
-## 🔌 API Endpoints
-
-### CSV Upload
-- `POST /api/csv/upload` - Upload CSV file
-- `GET /api/csv/preview/:fileId` - Preview CSV data
-
-### Import
-- `POST /api/import/process` - Start import process
-- `GET /api/import/status/:importId` - Get import status
-- `GET /api/import/history` - Get import history
-- `GET /api/import/history/:id` - Get specific import details
-
-### Admin
-- `GET /api/admin/stats` - Get system statistics
-- `GET /api/admin/imports` - Get all imports
-- `GET /api/admin/leads` - Get all leads
-- `GET /api/admin/leads/search` - Search leads
-
-## 🧪 Testing
+## Scripts
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm test -- --coverage
+npm run dev --workspace=backend
+npm run build --workspace=backend
+npm start --workspace=backend
+npm test --workspace=backend
 ```
 
-## 🏗️ Architecture
+The development server runs on `http://localhost:5000` by default.
 
-The backend follows a clean architecture pattern:
+## API Areas
 
-1. **Controllers**: Handle HTTP requests and responses
-2. **Services**: Contain business logic
-3. **Models**: Define database schemas
-4. **Middleware**: Process requests before controllers
-5. **Utils**: Reusable utility functions
-6. **Validators**: Input validation schemas
+- `POST /api/auth/register` - create a user
+- `POST /api/auth/login` - sign in and receive a JWT
+- `POST /api/csv/upload` - upload and parse a CSV
+- `GET /api/csv/preview/:id` - preview parsed CSV rows
+- `POST /api/import/:id` - process an uploaded CSV
+- `GET /api/import/:id/status` - check import progress
+- `GET /api/import/:id/results` - read import results
+- `GET /api/import/history` - list user import history
+- `GET /api/admin/*` - admin dashboards, imports, users, and leads
+- `GET /api/health` - health check with database status
 
-## 🔒 Security
+## Source Layout
 
-- JWT authentication
-- Rate limiting
-- CORS protection
-- Helmet security headers
-- Input validation with Zod
-- Secure file uploads
-- Environment variable validation
+```text
+src/
+├── config/       environment, database, and AI config
+├── constants/    CRM status and data-source constants
+├── controllers/  Express request handlers
+├── middleware/   auth, uploads, logging, rate limit, errors
+├── models/       Mongoose models
+├── routes/       API route modules
+├── services/     CSV, AI, CRM, and history business logic
+├── types/        Backend TypeScript types
+├── utils/        phone, email, date, retry, logger helpers
+├── validators/   Zod validation schemas
+├── app.ts        Express app setup
+└── server.ts     server bootstrap
+```
+
+## Development Notes
+
+- Uploaded files go to `uploads/` and are ignored by git.
+- Compiled output goes to `dist/` and is ignored by git.
+- Use `SKIP_AUTH=true` only for local testing.
+- Keep `.env` private. Update `.env.example` when new configuration keys are added.

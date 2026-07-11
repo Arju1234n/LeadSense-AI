@@ -1,0 +1,49 @@
+# Render Blueprint specification for LeadSense AI / GrowEasy CSV Importer
+# See https://render.com/docs/blueprints for details
+
+services:
+  # 1. Backend API Service
+  - type: web
+    name: leadsense-api
+    env: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false # User must provide their MongoDB connection string (e.g., MongoDB Atlas)
+      - key: JWT_SECRET
+        generateValue: true # Render will automatically generate a secure secret key
+      - key: BEDROCK_API_KEY
+        sync: false # User must provide their AWS Bedrock long-term API key
+      - key: AWS_REGION
+        value: us-east-1
+      - key: AI_MODEL
+        value: us.anthropic.claude-3-5-sonnet-20241022-v2:0
+      - key: SKIP_AUTH
+        value: "false"
+      - key: CORS_ORIGIN
+        value: "*" # Update this with specific frontend URLs in production
+
+  # 2. User Frontend
+  - type: web
+    name: leadsense-user-frontend
+    env: node
+    buildCommand: cd user-frontend && npm install && npm run build
+    startCommand: cd user-frontend && npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://leadsense-api.onrender.com/api # Replace with your actual backend URL if different
+
+  # 3. Admin Frontend
+  - type: web
+    name: leadsense-admin-frontend
+    env: node
+    buildCommand: cd admin-frontend && npm install && npm run build
+    startCommand: cd admin-frontend && npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://leadsense-api.onrender.com/api # Replace with your actual backend URL if different

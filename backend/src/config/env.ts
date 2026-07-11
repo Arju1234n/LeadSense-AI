@@ -4,7 +4,7 @@ import { z } from 'zod';
 // Load environment variables
 dotenv.config();
 
-// Environment variable schema
+// Environment variable schema - Multi-Provider AI Support
 const envSchema = z.object({
   // Server
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -17,16 +17,18 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
   JWT_EXPIRES_IN: z.string().default('7d'),
 
-  // AI Provider
-  AI_PROVIDER: z.enum(['openai', 'anthropic', 'gemini', 'bedrock']).default('openai'),
-  OPENAI_API_KEY: z.string().optional(),
-  ANTHROPIC_API_KEY: z.string().optional(),
-  GOOGLE_AI_API_KEY: z.string().optional(),
-  BEDROCK_API_KEY: z.string().optional(),
+  // AI Provider Selection
+  AI_PROVIDER: z.enum(['openai', 'anthropic', 'gemini', 'bedrock']).default('bedrock'),
+
+  // Provider API Keys (only the selected provider's key is required)
+  OPENAI_API_KEY: z.string().optional().default(''),
+  ANTHROPIC_API_KEY: z.string().optional().default(''),
+  GOOGLE_AI_API_KEY: z.string().optional().default(''),
+  BEDROCK_API_KEY: z.string().optional().default(''),
   AWS_REGION: z.string().default('us-east-1'),
 
-  // AI Configuration
-  AI_MODEL: z.string().default('gpt-4o-mini'),
+  // AI Model Configuration
+  AI_MODEL: z.string().default('us.anthropic.claude-3-5-sonnet-20241022-v2:0'),
   AI_TEMPERATURE: z.string().transform(Number).default('0'),
   AI_MAX_TOKENS: z.string().transform(Number).default('4000'),
   AI_BATCH_SIZE: z.string().transform(Number).default('10'),
@@ -48,7 +50,7 @@ const envSchema = z.object({
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
 
-  // Auth Bypass
+  // Auth Bypass (development only)
   SKIP_AUTH: z.string().transform((val) => val === 'true').default('false'),
 });
 
@@ -57,18 +59,29 @@ const parseEnv = () => {
   try {
     const parsed = envSchema.parse(process.env);
 
-    // Validate AI provider API key
-    if (parsed.AI_PROVIDER === 'openai' && !parsed.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY is required when AI_PROVIDER is openai');
+    // Validate that the selected AI provider's API key is present
+    const providerKeyMap: Record<string, { key: string; envVar: string }> = {
+      openai: { key: parsed.OPENAI_API_KEY, envVar: 'OPENAI_API_KEY' },
+      anthropic: { key: parsed.ANTHROPIC_API_KEY, envVar: 'ANTHROPIC_API_KEY' },
+      gemini: { key: parsed.GOOGLE_AI_API_KEY, envVar: 'GOOGLE_AI_API_KEY' },
+      bedrock: { key: parsed.BEDROCK_API_KEY, envVar: 'BEDROCK_API_KEY' },
+    };
+
+    const selected = providerKeyMap[parsed.AI_PROVIDER];
+    if (selected && !selected.key) {
+      throw new Error(
+        `${selected.envVar} is required when AI_PROVIDER is set to '${parsed.AI_PROVIDER}'`
+      );
     }
-    if (parsed.AI_PROVIDER === 'anthropic' && !parsed.ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY is required when AI_PROVIDER is anthropic');
-    }
-    if (parsed.AI_PROVIDER === 'gemini' && !parsed.GOOGLE_AI_API_KEY) {
-      throw new Error('GOOGLE_AI_API_KEY is required when AI_PROVIDER is gemini');
-    }
-    if (parsed.AI_PROVIDER === 'bedrock' && !parsed.BEDROCK_API_KEY) {
-      throw new Error('BEDROCK_API_KEY is required when AI_PROVIDER is bedrock');
+
+    // Validate Bedrock API key format if using Bedrock
+    if (
+      parsed.AI_PROVIDER === 'bedrock' &&
+      parsed.BEDROCK_API_KEY &&
+      !parsed.BEDROCK_API_KEY.startsWith('ABSK') &&
+      !parsed.BEDROCK_API_KEY.startsWith('sk-')
+    ) {
+      console.warn('⚠️  BEDROCK_API_KEY format may be incorrect. Expected Base64-encoded bearer token.');
     }
 
     return parsed;

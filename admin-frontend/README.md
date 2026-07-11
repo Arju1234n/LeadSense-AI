@@ -1,76 +1,55 @@
-# Admin Frontend - GrowEasy CSV Importer
+# Admin Frontend
 
-Next.js 15 application for system administration and analytics.
+Next.js admin app for monitoring imports, users, leads, and platform analytics.
 
-## 📋 Features
+## Setup
 
-- 📊 System-wide dashboard with analytics
-- 👥 User management and statistics
-- 🔍 Advanced lead search and filtering
-- 📈 Charts and visualizations
-- 📥 Bulk data export
-- 🔐 Admin-only access
-- 📱 Responsive design
-
-## 🚀 Quick Start
-
-### 1. Install Dependencies
+From the repository root:
 
 ```bash
-cd groweasy-csv-importer/admin-frontend
 npm install
 ```
 
-### 2. Configure Environment
+Optional local environment:
 
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_ADMIN_TOKEN=your-admin-token
 ```
 
-### 3. Run Development Server
+## Scripts
 
 ```bash
-npm run dev
+npm run dev --workspace=admin-frontend
+npm run build --workspace=admin-frontend
+npm start --workspace=admin-frontend
+npm run lint --workspace=admin-frontend
+npm run type-check --workspace=admin-frontend
 ```
 
-Open [http://localhost:3002](http://localhost:3002)
+The development server runs on `http://localhost:3002`.
 
-## 📁 Project Structure
+## Pages
 
+- `/login` - admin sign in
+- `/dashboard` - system overview
+- `/imports` - all import jobs
+- `/leads` - searchable lead list
+- `/users` - user overview
+- `/analytics` - charts and aggregate metrics
+
+## Source Layout
+
+```text
+src/
+├── app/          Next.js App Router pages and dashboard layout
+├── components/   tables, charts, navigation, modal, cards
+├── lib/          utility helpers
+├── services/     API clients
+└── types/        admin and shared TypeScript types
 ```
-admin-frontend/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── dashboard/         # Admin dashboard
-│   │   ├── imports/           # All system imports
-│   │   ├── leads/             # Lead explorer
-│   │   ├── users/             # User management
-│   │   └── analytics/         # System analytics
-│   ├── components/            # Reusable components
-│   ├── services/              # API services
-│   └── types/                 # TypeScript types
-└── package.json
-```
 
-## 🎯 Pages
+## Notes
 
-- **Dashboard** - System overview and statistics
-- **Imports** - All imports from all users
-- **Leads** - Advanced lead search and export
-- **Users** - User management
-- **Analytics** - Charts and insights
-
-## 🔐 Access Control
-
-Admin frontend requires admin authentication token.
-
----
-
-**Port:** 3002  
-**Access Level:** Admin Only
+- The app talks to the backend through `NEXT_PUBLIC_API_URL`.
+- Admin routes depend on backend authentication and authorization.
+- Styling uses Tailwind CSS and shared design classes in `src/app/globals.css`.
