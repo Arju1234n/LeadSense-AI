@@ -9,6 +9,8 @@ services:
     buildCommand: cd backend && npm install && npm run build
     startCommand: cd backend && npm start
     envVars:
+      - key: NODE_VERSION
+        value: 20
       - key: NODE_ENV
         value: production
       - key: PORT
@@ -35,6 +37,8 @@ services:
     buildCommand: cd user-frontend && npm install && npm run build
     startCommand: cd user-frontend && npm start
     envVars:
+      - key: NODE_VERSION
+        value: 20
       - key: NEXT_PUBLIC_API_URL
         value: https://leadsense-api.onrender.com/api # Replace with your actual backend URL if different
 
@@ -45,5 +49,7 @@ services:
     buildCommand: cd admin-frontend && npm install && npm run build
     startCommand: cd admin-frontend && npm start
     envVars:
+      - key: NODE_VERSION
+        value: 20
       - key: NEXT_PUBLIC_API_URL
         value: https://leadsense-api.onrender.com/api # Replace with your actual backend URL if different
